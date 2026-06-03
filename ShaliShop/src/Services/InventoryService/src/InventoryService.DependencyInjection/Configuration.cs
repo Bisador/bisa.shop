@@ -11,7 +11,7 @@ public static class Configuration
         //services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<InventoryGetAllQuery>());
         
         services.AddDbContext<InventoryDbContext>(options =>
-            options.UseSqlServer(connectionString,
+            options.UseNpgsql(connectionString,
                 b => b.MigrationsAssembly(AssemblyReference.GetAssemblyReference.FullName)));
 
         return services;

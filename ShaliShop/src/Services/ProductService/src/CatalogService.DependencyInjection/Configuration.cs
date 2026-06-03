@@ -18,7 +18,7 @@ public static class Configuration
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(CatalogServiceApplicationAssemblyReference.Get()));
 
         services.AddDbContext<CatalogDbContext>(options =>
-            options.UseSqlServer(connectionString,
+            options.UseNpgsql(connectionString,
                 b => b.MigrationsAssembly(CatalogServicePersistenceAssemblyReference.GetAssemblyReference.FullName)));
 
         return services;

@@ -34,8 +34,7 @@ services:
       - sql_data:/var/opt/mssql
     networks:
       - shalishop-net
-
-
+ 
 volumes:
   sql_data:
 
