@@ -8,8 +8,9 @@
 
     <ItemGroup>
         <PackageReference Include="MediatR"/>
-        <PackageReference Include="Microsoft.ApplicationInsights"/>
-        <PackageReference Include="Microsoft.AspNetCore"/>
+        <PackageReference Include="Microsoft.ApplicationInsights"/> 
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
+        
     </ItemGroup>
 
     <ItemGroup>

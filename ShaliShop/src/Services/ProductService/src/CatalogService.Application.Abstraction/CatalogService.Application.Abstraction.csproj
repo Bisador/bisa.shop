@@ -9,5 +9,5 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\Shared\Shared.Application\Shared.Application.csproj" />
     </ItemGroup>
-
+ 
 </Project>

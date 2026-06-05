@@ -22,9 +22,9 @@ builder.Services
     .AddInventoryService(connectionString)
     .AddCatalogService(connectionString)
     .AddTransient(typeof(IPipelineBehavior<,>), typeof(DomainExceptionPipelineBehavior<,>))
-    .AddEndpointsApiExplorer() 
-    .AddCorsServices()
-    .AddApplicationInsightsTelemetry();
+    .AddEndpointsApiExplorer()
+    .AddCorsServices();
+    // .AddApplicationInsightsTelemetry();
     // .AddHealthChecksServices(connectionString);
 
 builder.Services.RegisterEventHandling(builder.Environment, "");

@@ -16,5 +16,5 @@
       <Folder Include="Products\Repository\" />
       <Folder Include="SharedValueObjects\" />
     </ItemGroup>
-
+ 
 </Project>

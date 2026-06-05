@@ -1,7 +1,8 @@
-using Shared.Eventing;
+ 
+using Shared.Eventing.Abstraction;
 using Shared.Persistence;
 
 namespace CheckoutService.Persistence;
 
-public sealed class CheckoutUnitOfWork(CheckoutDbContext dbContext, DomainEventDispatcher dispatcher)
+public sealed class CheckoutUnitOfWork(CheckoutDbContext dbContext, IDomainEventDispatcher dispatcher)
     : UnitOfWorkBase(dbContext, dispatcher);

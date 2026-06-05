@@ -9,13 +9,11 @@
 
     <ItemGroup>
         <PackageReference Include="MediatR"/>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
-        <PackageReference Include="Microsoft.AspNetCore.Routing"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi"/> 
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore"/>
         <PackageReference Include="Asp.Versioning.Mvc"/>
         <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer"/>
-        <PackageReference Include="Swashbuckle.AspNetCore"/>
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" /> 
         <PackageReference Include="Scrutor"/>
         <PackageReference Include="Scalar.AspNetCore"/>
 
@@ -29,13 +27,13 @@
         <ProjectReference Include="..\..\Services\ProductService\src\CatalogService.Api\CatalogService.Api.csproj"/>
         <ProjectReference Include="..\..\Services\ProductService\src\CatalogService.DependencyInjection\CatalogService.DependencyInjection.csproj"/>
         <ProjectReference Include="..\..\Shared\Shared.Common\Shared.Common.csproj"/>
+        <ProjectReference Include="..\..\Shared\Shared.Eventing\Shared.Eventing.csproj" />
         <ProjectReference Include="..\..\Shared\Shared.Messaging\Shared.Messaging.csproj"/>
         <ProjectReference Include="..\..\Shared\Shared.Telemetry\Shared.Telemetry.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Microsoft.AspNetCore.OpenApi"/>
-        <Using Include="Microsoft.AspNetCore.Routing"/>
+        <Using Include="Microsoft.AspNetCore.OpenApi"/> 
         <Using Include="Shared.Common"/>
         <Using Include="MediatR"/>
     </ItemGroup>

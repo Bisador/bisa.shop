@@ -1,4 +1,5 @@
 using CatalogService.Api.Products;
+using Microsoft.AspNetCore.Routing;
 
 namespace CatalogService.Api;
 

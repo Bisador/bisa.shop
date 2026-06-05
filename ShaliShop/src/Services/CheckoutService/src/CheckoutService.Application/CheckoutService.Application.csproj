@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="MediatR"/>
+        <PackageReference Include="MediatR"/> 
     </ItemGroup>
 
     <ItemGroup>

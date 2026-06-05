@@ -9,7 +9,7 @@
     <ItemGroup>
         <PackageReference Include="MediatR"/>
         <PackageReference Include="FluentValidation"/>
-        <PackageReference Include="Microsoft.ApplicationInsights" />
+        <PackageReference Include="Microsoft.ApplicationInsights" /> 
     </ItemGroup>
     <ItemGroup>
         <Using Include="MediatR"/>

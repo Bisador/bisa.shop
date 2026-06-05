@@ -8,6 +8,7 @@ using CatalogService.Application.Products.Commands.Publish;
 using CatalogService.Application.Products.Commands.RemoveVariant;
 using CatalogService.Application.Products.Queries.GetAll;
 using CatalogService.Application.Products.Queries.GetById;
+using Microsoft.AspNetCore.Routing;
 
 namespace CatalogService.Api.Products;
 

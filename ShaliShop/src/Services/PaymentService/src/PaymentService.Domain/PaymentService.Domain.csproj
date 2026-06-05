@@ -15,5 +15,5 @@
         <Using Include="Shared.Domain"/>
         <Using Include="SharedService.Domain.ValueObjects"/>
     </ItemGroup>
-
+ 
 </Project>
