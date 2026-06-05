@@ -23,7 +23,7 @@ public class OrderReturnCommandHandler(
         order.Return(returnedItems);
 
         await orders.SaveAsync(order, ct);
-        await unitOfWork.CommitAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         return Result.Success();
     }

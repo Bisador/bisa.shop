@@ -21,7 +21,7 @@ public class ProductAddVariantCommandHandlerTests
             PriceOverride: new Money(19.99m)
         );
 
-        _products.Setup(r => r.LoadAsync(command.ProductId, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(command.ProductId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Product?) null);
 
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -35,7 +35,7 @@ public class ProductAddVariantCommandHandlerTests
     {
         var product = Product.Create("Shirt", "Soft cotton", new Money(29.99m), "Apparel");
 
-        _products.Setup(r => r.LoadAsync(product.Id, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(product.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(product);
 
         var command = new ProductAddVariantCommand(
@@ -51,7 +51,7 @@ public class ProductAddVariantCommandHandlerTests
         product.Variants.Should().ContainSingle(v => v.Sku == "SKU-002");
 
         _products.Verify(r => r.SaveAsync(product, It.IsAny<CancellationToken>()), Times.Once);
-        _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -59,7 +59,7 @@ public class ProductAddVariantCommandHandlerTests
     {
         var product = Product.Create("Shoes", "Running sneakers", new Money(59.99m), "Footwear");
 
-        _products.Setup(r => r.LoadAsync(product.Id, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(product.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(product);
 
         var command = new ProductAddVariantCommand(
@@ -84,7 +84,7 @@ public class ProductAddVariantCommandHandlerTests
         var product = Product.Create("Hat", "Wool beanie", new Money(15.00m), "Accessories");
         product.AddVariant(new ProductVariant("SKU-010", new Dictionary<string, string> {["Size"] = "One"}));
 
-        _products.Setup(r => r.LoadAsync(product.Id, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(product.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(product);
 
         var command = new ProductAddVariantCommand(

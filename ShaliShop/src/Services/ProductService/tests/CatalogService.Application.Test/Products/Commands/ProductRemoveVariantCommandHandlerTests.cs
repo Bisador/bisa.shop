@@ -18,7 +18,7 @@ public class ProductRemoveVariantCommandHandlerTests
     {
         var command = new ProductRemoveVariantCommand(Guid.NewGuid(), "SKU-404");
 
-        _products.Setup(r => r.LoadAsync(command.ProductId, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(command.ProductId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Product?) null);
 
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -33,7 +33,7 @@ public class ProductRemoveVariantCommandHandlerTests
         var product = Product.Create("T-Shirt", "Basic cotton", new Money(19.99m), "Apparel");
         product.AddVariant(new ProductVariant("SKU-XL", new Dictionary<string, string> {["Size"] = "XL"}));
 
-        _products.Setup(r => r.LoadAsync(product.Id, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(product.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(product);
 
         var command = new ProductRemoveVariantCommand(product.Id, "SKU-XL");
@@ -43,7 +43,7 @@ public class ProductRemoveVariantCommandHandlerTests
         product.Variants.Any(v => v.Sku == "SKU-XL").Should().BeFalse();
 
         _products.Verify(r => r.SaveAsync(product, It.IsAny<CancellationToken>()), Times.Once);
-        _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class ProductRemoveVariantCommandHandlerTests
         var product = Product.Create("Shoes", "Sneaker", new Money(59.99m), "Footwear");
         product.AddVariant(new ProductVariant("SKU-White42", new Dictionary<string, string> {["Color"] = "White", ["Size"] = "42"}));
 
-        _products.Setup(r => r.LoadAsync(product.Id, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(product.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(product);
 
         await _handler.Handle(new ProductRemoveVariantCommand(product.Id, "SKU-White42"), CancellationToken.None);
@@ -69,7 +69,7 @@ public class ProductRemoveVariantCommandHandlerTests
     {
         var product = Product.Create("Hat", "Wool", new Money(12.50m), "Accessories");
 
-        _products.Setup(r => r.LoadAsync(product.Id, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(product.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(product);
 
         var command = new ProductRemoveVariantCommand(product.Id, "SKU-Missing");

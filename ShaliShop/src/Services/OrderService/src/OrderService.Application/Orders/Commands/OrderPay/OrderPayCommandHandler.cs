@@ -25,7 +25,7 @@ public class OrderPayCommandHandler(
         order.Pay(payment);
 
         await orders.SaveAsync(order, ct);
-        await unitOfWork.CommitAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         return Result.Success();
     }

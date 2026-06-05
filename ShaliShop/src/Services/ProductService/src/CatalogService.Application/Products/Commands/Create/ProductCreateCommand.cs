@@ -4,5 +4,7 @@ public record ProductCreateCommand(
     string Name,
     string Description,
     Money Price,
-    string Category
+    string Category,
+    Guid? ThumbnailMediaId,
+    IReadOnlyCollection<Guid> MediaIds
 ) : ICommand<Guid>;

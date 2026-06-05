@@ -51,7 +51,7 @@ public class CartCheckoutCommandHandlerTests
         cartRepo.Verify(r => r.SaveAsync(It.Is<Cart>(c => c.Items.Count == 0), It.IsAny<CancellationToken>()), Times.Once);
         eventPublisher.Verify(p => p.PublishAsync(It.IsAny<OrderPlaced>(), It.IsAny<CancellationToken>()), Times.Once);
         checkoutUow.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.AtLeastOnce);
-        orderUow.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        orderUow.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

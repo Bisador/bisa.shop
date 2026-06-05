@@ -18,7 +18,7 @@ public class ProductChangePriceCommandHandlerTests
     {
         var command = new ProductChangePriceCommand(Guid.NewGuid(), new Money(49.99m));
 
-        _products.Setup(r => r.LoadAsync(command.ProductId, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(command.ProductId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Product?)null);
 
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -31,7 +31,7 @@ public class ProductChangePriceCommandHandlerTests
     {
         var product = Product.Create("Backpack", "Durable canvas", new Money(39.99m), "Accessories");
 
-        _products.Setup(r => r.LoadAsync(product.Id, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(product.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(product);
 
         var newPrice = new Money(44.99m);
@@ -41,14 +41,14 @@ public class ProductChangePriceCommandHandlerTests
         product.Price.Should().Be(newPrice);
 
         _products.Verify(r => r.SaveAsync(product, It.IsAny<CancellationToken>()), Times.Once);
-        _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
     [Fact]
     public async Task Should_raise_ProductPriceChanged_event()
     {
         var product = Product.Create("Jacket", "Winter fleece", new Money(89.00m), "Outerwear");
 
-        _products.Setup(r => r.LoadAsync(product.Id, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(product.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(product);
 
         var result = await _handler.Handle(new ProductChangePriceCommand(product.Id, new Money(99.00m)), CancellationToken.None);
@@ -67,7 +67,7 @@ public class ProductChangePriceCommandHandlerTests
         var price = new Money(59.00m);
         var product = Product.Create("Watch", "Leather strap", price, "Jewelry");
 
-        _products.Setup(r => r.LoadAsync(product.Id, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(product.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(product);
 
         var result = await _handler.Handle(new ProductChangePriceCommand(product.Id, price), CancellationToken.None);

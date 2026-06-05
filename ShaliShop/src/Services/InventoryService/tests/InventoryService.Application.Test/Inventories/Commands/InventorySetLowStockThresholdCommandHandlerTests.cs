@@ -41,7 +41,7 @@ public class InventorySetLowStockThresholdCommandHandlerTests
         result.IsSuccess.Should().BeTrue();
 
         _inventories.Verify(r => r.SaveAsync(inventory, It.IsAny<CancellationToken>()), Times.Once);
-        _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
 }

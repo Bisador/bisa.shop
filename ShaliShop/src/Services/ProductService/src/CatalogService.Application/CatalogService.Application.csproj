@@ -17,6 +17,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\..\Shared\Shared.Application\Shared.Application.csproj"/>
         <ProjectReference Include="..\..\..\..\Shared\Shared.Common\Shared.Common.csproj"/>
+        <ProjectReference Include="..\..\..\..\Shared\Shared.Media.Contracts\Shared.Media.Contracts.csproj" />
         <ProjectReference Include="..\..\..\SharedService\src\SharedService.Domain\SharedService.Domain.csproj"/>
         <ProjectReference Include="..\CatalogService.Application.Abstraction\CatalogService.Application.Abstraction.csproj"/>
         <ProjectReference Include="..\CatalogService.Domain\CatalogService.Domain.csproj"/>

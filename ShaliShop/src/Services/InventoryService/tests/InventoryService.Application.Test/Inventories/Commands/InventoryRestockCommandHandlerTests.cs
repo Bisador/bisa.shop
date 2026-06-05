@@ -41,7 +41,7 @@ public class InventoryRestockCommandHandlerTests
         inventory.QuantityOnHand.Should().Be(15);
 
         _inventories.Verify(r => r.SaveAsync(inventory, It.IsAny<CancellationToken>()), Times.Once);
-        _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
     [Fact]
     public async Task Should_raise_InventoryRestocked_event()

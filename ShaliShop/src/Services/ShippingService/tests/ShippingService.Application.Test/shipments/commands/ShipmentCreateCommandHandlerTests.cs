@@ -27,7 +27,7 @@ public class ShipmentCreateCommandHandlerTests
         _shipments.Setup(r => r.SaveAsync(It.IsAny<Shipment>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        _unitOfWork.Setup(u => u.CommitAsync(It.IsAny<CancellationToken>()))
+        _unitOfWork.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -36,7 +36,7 @@ public class ShipmentCreateCommandHandlerTests
         result.Value.Should().NotBeEmpty();
 
         _shipments.Verify(r => r.SaveAsync(It.Is<Shipment>(s => s.OrderId == orderId), It.IsAny<CancellationToken>()), Times.Once);
-        _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

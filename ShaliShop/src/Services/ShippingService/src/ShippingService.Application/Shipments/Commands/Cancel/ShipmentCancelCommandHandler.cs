@@ -17,7 +17,7 @@ public class ShipmentCancelCommandHandler(
         shipment.Cancel();
 
         await shipments.SaveAsync(shipment, ct);
-        await unitOfWork.CommitAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         return Result.Success();
     }

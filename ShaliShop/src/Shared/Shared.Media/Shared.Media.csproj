@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Shared.Media.Contracts\Shared.Media.Contracts.csproj" />
+    </ItemGroup>
+
 </Project>

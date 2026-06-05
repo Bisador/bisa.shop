@@ -16,7 +16,7 @@ public class ShipmentRetryDeliveryCommandHandler(
         shipment.RetryDelivery();
 
         await shipments.SaveAsync(shipment, ct);
-        await unitOfWork.CommitAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         return Result.Success();
     }

@@ -65,7 +65,7 @@ public class OrderCancelCommandHandlerTests
         order.Status.Should().Be(OrderStatus.Cancelled);
 
         _orders.Verify(r => r.SaveAsync(order, It.IsAny<CancellationToken>()), Times.Once);
-        _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

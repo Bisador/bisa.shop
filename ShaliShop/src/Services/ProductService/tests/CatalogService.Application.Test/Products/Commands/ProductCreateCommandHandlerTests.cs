@@ -25,7 +25,7 @@ public class ProductCreateCommandHandlerTests
         _products.Setup(r => r.SaveAsync(It.IsAny<Product>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        _unitOfWork.Setup(u => u.CommitAsync(It.IsAny<CancellationToken>()))
+        _unitOfWork.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -40,7 +40,7 @@ public class ProductCreateCommandHandlerTests
             p.Price.Amount == 129.99m
         ), It.IsAny<CancellationToken>()), Times.Once);
 
-        _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
     [Fact]
     public async Task Should_raise_ProductCreated_event()

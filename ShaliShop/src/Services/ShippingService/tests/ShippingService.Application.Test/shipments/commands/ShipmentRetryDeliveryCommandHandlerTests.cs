@@ -59,7 +59,7 @@ public class ShipmentRetryDeliveryCommandHandlerTests
         result.IsSuccess.Should().BeTrue();
 
         _shipments.Verify(r => r.SaveAsync(shipment, It.IsAny<CancellationToken>()), Times.Once);
-        _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

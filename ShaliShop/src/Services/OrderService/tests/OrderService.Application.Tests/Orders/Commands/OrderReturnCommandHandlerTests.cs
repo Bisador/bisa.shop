@@ -81,7 +81,7 @@ public class OrderReturnCommandHandlerTests
         order.Status.Should().Be(OrderStatus.Returned);
 
         _orders.Verify(r => r.SaveAsync(order, It.IsAny<CancellationToken>()), Times.Once);
-        _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

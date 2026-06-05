@@ -12,6 +12,32 @@ public sealed class Product : AggregateRoot
     public string Description { get; private set; } = null!;
     public string Category { get; private set; } = null!;
 
+    private readonly List<Guid> _mediaIds = [];
+    public IReadOnlyCollection<Guid> MediaIds => _mediaIds.AsReadOnly();
+
+    public Guid? ThumbnailMediaId { get; private set; }
+
+    public void SetThumbnail(Guid mediaId)
+    {
+        ThumbnailMediaId = mediaId;
+    }
+
+    public void AddMedia(Guid mediaId)
+    {
+        if (_mediaIds.Contains(mediaId))
+            return;
+
+        _mediaIds.Add(mediaId);
+    }
+
+    public void RemoveMedia(Guid mediaId)
+    {
+        _mediaIds.Remove(mediaId);
+
+        if (ThumbnailMediaId == mediaId)
+            ThumbnailMediaId = null;
+    }
+    
     #endregion
 
     #region Commercial

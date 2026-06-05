@@ -16,7 +16,7 @@ public class OrderConfirmCommandHandler(
         order.Confirm();
 
         await orders.SaveAsync(order, ct);
-        await unitOfWork.CommitAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         return Result.Success();
     }

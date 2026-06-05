@@ -16,7 +16,7 @@ public class InventorySetLowStockThresholdCommandHandler(
         inventory.SetLowStockThreshold(command.Threshold);
 
         await inventories.SaveAsync(inventory, ct);
-        await unitOfWork.CommitAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         return Result.Success();
     }

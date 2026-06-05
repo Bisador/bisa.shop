@@ -18,7 +18,7 @@ public class ProductDiscontinueCommandHandlerTests
     {
         var command = new ProductDiscontinueCommand(Guid.NewGuid());
 
-        _products.Setup(r => r.LoadAsync(command.ProductId, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(command.ProductId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Product?) null);
 
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -32,7 +32,7 @@ public class ProductDiscontinueCommandHandlerTests
     {
         var product = Product.Create("Speaker", "Bluetooth", new Money(49.99m), "Electronics");
 
-        _products.Setup(r => r.LoadAsync(product.Id, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(product.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(product);
 
         var result = await _handler.Handle(new ProductDiscontinueCommand(product.Id), CancellationToken.None);
@@ -42,7 +42,7 @@ public class ProductDiscontinueCommandHandlerTests
         product.IsPublished.Should().BeFalse(); // gets auto-unpublished
 
         _products.Verify(r => r.SaveAsync(product, It.IsAny<CancellationToken>()), Times.Once);
-        _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -50,7 +50,7 @@ public class ProductDiscontinueCommandHandlerTests
     {
         var product = Product.Create("Laptop", "Gaming spec", new Money(799), "Computers");
 
-        _products.Setup(r => r.LoadAsync(product.Id, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(product.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(product);
 
         await _handler.Handle(new ProductDiscontinueCommand(product.Id), CancellationToken.None);
@@ -67,7 +67,7 @@ public class ProductDiscontinueCommandHandlerTests
         var product = Product.Create("Mouse", "Wireless", new Money(29.99m), "Accessories");
         product.Discontinue(); // Already discontinued
 
-        _products.Setup(r => r.LoadAsync(product.Id, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(product.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(product);
 
         await _handler.Handle(new ProductDiscontinueCommand(product.Id), CancellationToken.None);

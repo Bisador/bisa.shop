@@ -2,10 +2,13 @@ using CatalogService.Api;
 using CatalogService.DependencyInjection;
 using CheckoutService.DependencyInjection;
 using InventoryService.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Scalar.AspNetCore;
 using Shared.Application.Behavior;
+using Shared.Media.Abstractions;
+using Shared.Media.Contracts;
 using Shared.Presentation.Cors;
-using Shared.Presentation.ExceptionHandling; 
+using Shared.Presentation.ExceptionHandling;
 using Shared.Telemetry;
 using WebApplication.Configurations;
 using static Microsoft.AspNetCore.Builder.WebApplication;
@@ -16,7 +19,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 // Configure Services.
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("DefaultConnection not found");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
+                       throw new InvalidOperationException("DefaultConnection not found");
 builder.Services
     .AddCheckoutService(connectionString)
     .AddInventoryService(connectionString)
@@ -24,8 +28,16 @@ builder.Services
     .AddTransient(typeof(IPipelineBehavior<,>), typeof(DomainExceptionPipelineBehavior<,>))
     .AddEndpointsApiExplorer()
     .AddCorsServices();
-    // .AddApplicationInsightsTelemetry();
-    // .AddHealthChecksServices(connectionString);
+// .AddApplicationInsightsTelemetry();
+// .AddHealthChecksServices(connectionString);
+
+builder.Services.Configure<MediaServiceOptions>(builder.Configuration.GetSection(MediaServiceOptions.SectionName));
+
+builder.Services.AddHttpClient<IMediaServiceClient, MediaServiceClient>((sp, client) =>
+{
+    var options =sp.GetRequiredService<IOptions<MediaServiceOptions>>(); 
+    client.BaseAddress =new Uri(options.Value.BaseUrl);
+});
 
 builder.Services.RegisterEventHandling(builder.Environment, "");
 
@@ -49,13 +61,15 @@ if (app.Environment.IsDevelopment())
         options.WithTitle("Shop Service API");
         options.WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
     });
-} 
+}
+
 app.UseHttpsRedirection();
 
 if (!app.Environment.IsDevelopment())
 {
     app.UseCustomExceptionHandler();
 }
+
 app.UseCorrelationId();
 
 app.MapCatalogEndpoints();

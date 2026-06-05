@@ -28,6 +28,7 @@
         <ProjectReference Include="..\..\Services\ProductService\src\CatalogService.DependencyInjection\CatalogService.DependencyInjection.csproj"/>
         <ProjectReference Include="..\..\Shared\Shared.Common\Shared.Common.csproj"/>
         <ProjectReference Include="..\..\Shared\Shared.Eventing\Shared.Eventing.csproj" />
+        <ProjectReference Include="..\..\Shared\Shared.Media\Shared.Media.csproj" />
         <ProjectReference Include="..\..\Shared\Shared.Messaging\Shared.Messaging.csproj"/>
         <ProjectReference Include="..\..\Shared\Shared.Telemetry\Shared.Telemetry.csproj"/>
     </ItemGroup>

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Shared.Persistence.Converters;
 
 namespace CatalogService.Persistence.Products;
@@ -44,5 +45,18 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property<byte[]>("RowVersion")
             .IsRowVersion()
             .IsConcurrencyToken();
+
+
+        builder.Property(p => p.ThumbnailMediaId);
+
+
+        builder.Navigation(p => p.MediaIds)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.Property(p => p.MediaIds)
+            .HasColumnName("MediaIds")
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
+                v => JsonSerializer.Deserialize<List<Guid>>(v, JsonSerializerOptions.Default)!);
     }
 }

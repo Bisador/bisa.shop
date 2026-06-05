@@ -11,7 +11,7 @@ public sealed class Product : AggregateRoot
     public Money Price { get; private set; } = null!;
     public int AvailableStock { get; private set; }
     public bool IsActive { get; private set; }
-
+ 
     private Product()
     {
     } // For EF

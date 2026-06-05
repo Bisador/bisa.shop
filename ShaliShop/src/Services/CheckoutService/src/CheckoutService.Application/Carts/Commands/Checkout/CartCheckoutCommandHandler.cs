@@ -49,7 +49,7 @@ public class CartCheckoutCommandHandler(
 
         await UnitOfWorkCoordinator.CommitAllAsync(
             () => checkoutUnitOfWork.CommitAsync(ct),
-            () => orderUnitOfWork.CommitAsync(ct));
+            () => orderUnitOfWork.SaveChangesAsync(ct));
 
         await checkoutUnitOfWork.CommitAsync(ct);
 

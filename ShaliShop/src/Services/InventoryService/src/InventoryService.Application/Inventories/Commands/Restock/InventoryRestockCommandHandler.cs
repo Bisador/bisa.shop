@@ -16,7 +16,7 @@ public class InventoryRestockCommandHandler(
         inventory.Restock(command.Quantity);
 
         await inventories.SaveAsync(inventory, ct);
-        await unitOfWork.CommitAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         return Result.Success();
     }

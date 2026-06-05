@@ -16,7 +16,7 @@ public class ShipmentDispatchCommandHandler(
         shipment.Dispatch(command.Carrier, command.TrackingNumber);
 
         await shipments.SaveAsync(shipment, ct);
-        await unitOfWork.CommitAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         return Result.Success();
     }

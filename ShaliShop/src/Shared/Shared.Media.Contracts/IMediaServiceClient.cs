@@ -1,13 +1,13 @@
 ﻿using Shared.Common;
 
-namespace Shared.Media.Abstractions;
+namespace Shared.Media.Contracts;
 
 public interface IMediaServiceClient
 {
     Task<Result> ValidateAsync(
         Guid tenantId,
         IEnumerable<Guid> mediaIds,
-        CancellationToken cancellationToken);
+        CancellationToken ct);
 
     Task<Result> LinkAsync(
         Guid tenantId,

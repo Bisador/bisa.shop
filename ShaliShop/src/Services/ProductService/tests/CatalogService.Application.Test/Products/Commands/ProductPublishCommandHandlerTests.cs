@@ -19,7 +19,7 @@ public class ProductPublishCommandHandlerTests
     {
         var command = new ProductPublishCommand(Guid.NewGuid());
 
-        _products.Setup(r => r.LoadAsync(command.ProductId, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(command.ProductId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Product?) null);
 
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -33,7 +33,7 @@ public class ProductPublishCommandHandlerTests
     {
         var product = Product.Create("Notebook", "Lined A5", new Money(5.99m), "Stationery");
 
-        _products.Setup(r => r.LoadAsync(product.Id, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(product.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(product);
 
         var result = await _handler.Handle(new ProductPublishCommand(product.Id), CancellationToken.None);
@@ -43,7 +43,7 @@ public class ProductPublishCommandHandlerTests
         product.PublishedAt.Should().NotBeNull();
 
         _products.Verify(r => r.SaveAsync(product, It.IsAny<CancellationToken>()), Times.Once);
-        _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public class ProductPublishCommandHandlerTests
     {
         var product = Product.Create("Pencil", "HB graphite", new Money(0.99m), "Stationery");
 
-        _products.Setup(r => r.LoadAsync(product.Id, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(product.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(product);
 
         await _handler.Handle(new ProductPublishCommand(product.Id), CancellationToken.None);
@@ -67,7 +67,7 @@ public class ProductPublishCommandHandlerTests
     {
         var product = Product.Create("", "Unnamed", new Money(0), "Misc");
 
-        _products.Setup(r => r.LoadAsync(product.Id, It.IsAny<CancellationToken>()))
+        _products.Setup(r => r.FindAsync(product.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(product);
 
         Func<Task> act = async () => await _handler.Handle(new ProductPublishCommand(product.Id), CancellationToken.None);

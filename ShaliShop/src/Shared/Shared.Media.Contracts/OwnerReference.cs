@@ -1,3 +1,3 @@
-namespace Shared.Media.Abstractions;
+namespace Shared.Media.Contracts;
 
 public record OwnerReference(string OwnerType, string OwnerId);

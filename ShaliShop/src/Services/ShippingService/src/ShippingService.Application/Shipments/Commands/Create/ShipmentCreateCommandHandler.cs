@@ -16,7 +16,7 @@ public class CreateShipmentCommandHandler(
         var shipment = Shipment.Create(command.OrderId);
 
         await shipments.SaveAsync(shipment, ct);
-        await unitOfWork.CommitAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         return shipment.Id;
     }

@@ -7,7 +7,7 @@ namespace Shared.Persistence;
 
 public abstract class UnitOfWorkBase(DbContext dbContext, IDomainEventDispatcher dispatcher) : IUnitOfWork
 {
-    public async Task CommitAsync(CancellationToken cancellationToken = default)
+    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         await dbContext.SaveChangesAsync(cancellationToken);
         await DispatchDomainEventsAsync(cancellationToken);

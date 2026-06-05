@@ -156,7 +156,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Messaging", "src\Sha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Media", "src\Shared\Shared.Media\Shared.Media.csproj", "{232AFB98-85B5-4729-AFE9-43925314F67D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Media.Abstractions", "src\Shared\Shared.Media.Abstractions\Shared.Media.Abstractions.csproj", "{7B541DD9-8C97-41F4-A0DF-D7FBDE4CC5A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Media.Contracts", "src\Shared\Shared.Media.Contracts\Shared.Media.Contracts.csproj", "{7B541DD9-8C97-41F4-A0DF-D7FBDE4CC5A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

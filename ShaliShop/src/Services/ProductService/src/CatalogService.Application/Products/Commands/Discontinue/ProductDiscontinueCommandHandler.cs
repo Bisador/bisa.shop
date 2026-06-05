@@ -9,14 +9,14 @@ public class ProductDiscontinueCommandHandler(
 {
     public async Task<Result> Handle(ProductDiscontinueCommand command, CancellationToken ct)
     {
-        var product = await products.LoadAsync(command.ProductId, ct);
+        var product = await products.FindAsync(command.ProductId, ct);
         if (product is null)
             return Result.Failure(new ProductNotFoundError(command.ProductId));
 
         product.Discontinue();
 
-        await products.SaveAsync(product, ct);
-        await unitOfWork.CommitAsync(ct);
+        
+        await unitOfWork.SaveChangesAsync(ct);
 
         return Result.Success();
     }
