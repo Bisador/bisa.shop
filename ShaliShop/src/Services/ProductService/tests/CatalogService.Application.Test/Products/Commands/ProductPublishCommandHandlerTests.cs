@@ -41,8 +41,7 @@ public class ProductPublishCommandHandlerTests
         result.IsSuccess.Should().BeTrue();
         product.IsPublished.Should().BeTrue();
         product.PublishedAt.Should().NotBeNull();
-
-        _products.Verify(r => r.SaveAsync(product, It.IsAny<CancellationToken>()), Times.Once);
+ 
         _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 

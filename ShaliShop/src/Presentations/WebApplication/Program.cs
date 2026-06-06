@@ -5,7 +5,7 @@ using InventoryService.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Scalar.AspNetCore;
 using Shared.Application.Behavior;
-using Shared.Media.Abstractions;
+using Shared.Media; 
 using Shared.Media.Contracts;
 using Shared.Presentation.Cors;
 using Shared.Presentation.ExceptionHandling;

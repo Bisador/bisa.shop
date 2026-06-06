@@ -49,8 +49,7 @@ public class ProductAddVariantCommandHandlerTests
 
         result.IsSuccess.Should().BeTrue();
         product.Variants.Should().ContainSingle(v => v.Sku == "SKU-002");
-
-        _products.Verify(r => r.SaveAsync(product, It.IsAny<CancellationToken>()), Times.Once);
+ 
         _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 

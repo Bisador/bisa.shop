@@ -6,7 +6,7 @@ using Shared.Media.Contracts.Responses;
 
 namespace Shared.Media;
 
-internal sealed class MediaServiceClient(HttpClient httpClient) : IMediaServiceClient
+public sealed class MediaServiceClient(HttpClient httpClient) : IMediaServiceClient
 {
     public async Task<Result> ValidateAsync(
         Guid tenantId,

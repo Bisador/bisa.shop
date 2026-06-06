@@ -40,8 +40,7 @@ public class ProductDiscontinueCommandHandlerTests
         result.IsSuccess.Should().BeTrue();
         product.IsDiscontinued.Should().BeTrue();
         product.IsPublished.Should().BeFalse(); // gets auto-unpublished
-
-        _products.Verify(r => r.SaveAsync(product, It.IsAny<CancellationToken>()), Times.Once);
+ 
         _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 

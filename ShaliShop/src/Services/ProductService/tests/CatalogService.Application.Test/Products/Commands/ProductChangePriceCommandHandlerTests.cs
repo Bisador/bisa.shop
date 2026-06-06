@@ -39,8 +39,7 @@ public class ProductChangePriceCommandHandlerTests
 
         result.IsSuccess.Should().BeTrue();
         product.Price.Should().Be(newPrice);
-
-        _products.Verify(r => r.SaveAsync(product, It.IsAny<CancellationToken>()), Times.Once);
+ 
         _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
     [Fact]

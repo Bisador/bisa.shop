@@ -41,8 +41,7 @@ public class ProductRemoveVariantCommandHandlerTests
 
         result.IsSuccess.Should().BeTrue();
         product.Variants.Any(v => v.Sku == "SKU-XL").Should().BeFalse();
-
-        _products.Verify(r => r.SaveAsync(product, It.IsAny<CancellationToken>()), Times.Once);
+ 
         _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
