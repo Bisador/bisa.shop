@@ -37,7 +37,7 @@ builder.Services.AddHttpClient<IMediaServiceClient, MediaServiceClient>((sp, cli
 {
     var options =sp.GetRequiredService<IOptions<MediaServiceOptions>>(); 
     client.BaseAddress =new Uri(options.Value.BaseUrl);
-});
+}).AddStandardResilienceHandler();
 
 builder.Services.RegisterEventHandling(builder.Environment, "");
 

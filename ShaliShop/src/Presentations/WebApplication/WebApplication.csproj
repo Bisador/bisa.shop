@@ -13,7 +13,9 @@
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore"/>
         <PackageReference Include="Asp.Versioning.Mvc"/>
         <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer"/>
+        <PackageReference Include="Microsoft.Extensions.Http.Resilience" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" /> 
+        <PackageReference Include="Polly.Core" /> 
         <PackageReference Include="Scrutor"/>
         <PackageReference Include="Scalar.AspNetCore"/>
 
