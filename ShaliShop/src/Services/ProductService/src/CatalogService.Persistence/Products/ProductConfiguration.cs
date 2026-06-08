@@ -1,4 +1,4 @@
-using System.Text.Json;
+using CatalogService.Domain.Products.ValueObjects;
 using Shared.Persistence.Converters;
 
 namespace CatalogService.Persistence.Products;
@@ -11,9 +11,9 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.HasKey(p => p.Id);
 
-        builder.Property(p => p.Name).IsRequired().HasMaxLength(128);
-        builder.Property(p => p.Description).HasMaxLength(512);
-        builder.Property(p => p.Category).IsRequired();
+        builder.Property(p => p.Name).IsRequired().HasMaxLength(200);
+        builder.Property(p => p.Description).HasMaxLength(1000);
+        builder.Property(p => p.Category).HasMaxLength(200);
         builder.Property(p => p.IsPublished);
         builder.Property(p => p.IsDiscontinued);
         builder.Property(p => p.PublishedAt);
@@ -47,16 +47,29 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsConcurrencyToken();
 
 
-        builder.Property(p => p.ThumbnailMediaId);
+        builder.Property(p => p.ThumbnailMedia);
 
 
-        builder.Navigation(p => p.MediaIds)
+        builder.Navigation(p => p.MediaItems)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.Property(p => p.MediaIds)
-            .HasColumnName("MediaIds")
-            .HasConversion(
-                v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
-                v => JsonSerializer.Deserialize<List<Guid>>(v, JsonSerializerOptions.Default)!);
+        builder.OwnsMany(
+            p => p.MediaItems,
+            media =>
+            {
+                media.ToTable("ProductMedia");
+
+                media.WithOwner()
+                    .HasForeignKey("ProductId");
+
+                media.Property(x => x.MediaId);
+
+                media.HasKey(
+                    "ProductId",
+                    nameof(ProductMediaValue.MediaId));
+            });
+          
+        builder.OwnsOne(p => p.ThumbnailMedia,
+            thumbnail => { thumbnail.Property(p => p.MediaId).HasColumnName("ThumbnailId"); });
     }
 }

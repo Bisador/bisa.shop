@@ -2,9 +2,10 @@
 
 public record ProductCreateCommand(
     string Name,
-    string Description,
-    Money Price,
-    string Category,
+    string? Description,
+    decimal Amount,
+    string? Currency, 
+    string? Category,
     Guid? ThumbnailMediaId = null,
     IReadOnlyCollection<Guid>? MediaIds = null
 ) : ICommand<Guid>;

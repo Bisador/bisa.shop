@@ -1,6 +1,7 @@
 using CatalogService.Domain.Products.DomainEvents;
 using CatalogService.Domain.Products.Exceptions;
 using CatalogService.Domain.Products.Rules;
+using CatalogService.Domain.Products.ValueObjects;
 
 namespace CatalogService.Domain.Products.Aggregates;
 
@@ -9,35 +10,38 @@ public sealed class Product : AggregateRoot
     #region Descriptive
 
     public string Name { get; private set; } = null!;
-    public string Description { get; private set; } = null!;
-    public string Category { get; private set; } = null!;
+    public string? Description { get; private set; }
+    public string? Category { get; private set; }
 
-    private readonly List<Guid> _mediaIds = [];
-    public IReadOnlyCollection<Guid> MediaIds => _mediaIds.AsReadOnly();
+    private readonly List<ProductMediaValue> _mediaItems = [];
+    public IReadOnlyCollection<ProductMediaValue> MediaItems => _mediaItems.AsReadOnly();
 
-    public Guid? ThumbnailMediaId { get; private set; }
+    public ProductMediaValue? ThumbnailMedia { get; private set; }
 
-    public void SetThumbnail(Guid mediaId)
+    public void SetThumbnail(ProductMediaValue media)
     {
-        ThumbnailMediaId = mediaId;
+        if (!_mediaItems.Contains(media))
+            throw new ThumbnailMustExistInMediaCollectionException();
+
+        ThumbnailMedia = media;
     }
 
-    public void AddMedia(Guid mediaId)
+    public void AddMedia(ProductMediaValue media)
     {
-        if (_mediaIds.Contains(mediaId))
+        if (_mediaItems.Contains(media))
             return;
 
-        _mediaIds.Add(mediaId);
+        _mediaItems.Add(media);
     }
 
-    public void RemoveMedia(Guid mediaId)
+    public void RemoveMedia(ProductMediaValue media)
     {
-        _mediaIds.Remove(mediaId);
+        _mediaItems.Remove(media);
 
-        if (ThumbnailMediaId == mediaId)
-            ThumbnailMediaId = null;
+        if (ThumbnailMedia is not null && ThumbnailMedia.Equals(media))
+            ThumbnailMedia = null;
     }
-    
+
     #endregion
 
     #region Commercial
@@ -52,10 +56,10 @@ public sealed class Product : AggregateRoot
         if (string.IsNullOrWhiteSpace(Name) || Price.Amount <= 0)
             throw new CannotPublishWithoutNameAndPrice();
 
-        CheckRule(new DiscontinuedProductsCannotBePublishedException(IsDiscontinued)); 
+        CheckRule(new DiscontinuedProductsCannotBePublishedException(IsDiscontinued));
 
         IsPublished = true;
-        PublishedAt = DateTime.UtcNow; 
+        PublishedAt = DateTime.UtcNow;
 
         AddDomainEvent(new ProductPublished(Id));
     }
@@ -65,7 +69,7 @@ public sealed class Product : AggregateRoot
         if (newPrice.Equals(Price))
             return;
 
-        Price = newPrice; 
+        Price = newPrice;
 
         AddDomainEvent(new ProductPriceChanged(Id, newPrice));
     }
@@ -125,27 +129,26 @@ public sealed class Product : AggregateRoot
     #endregion
 
     #endregion
-   
-    private Product()
+
+    private Product() : base(Guid.NewGuid())
     {
     }
 
-    private Product(string name, string description, Money price, string category) : base(Guid.NewGuid())
+    private Product(string name, string? description, Money price, string? category) : this()
     {
         Name = name;
         Description = description;
         Price = price;
-        Category = category; 
+        Category = category;
         IsPublished = false;
         IsDiscontinued = false;
 
         AddDomainEvent(new ProductCreated(Id, Name, Category));
     }
 
-    public static Product Create(string name, string description, Money price, string category)
-    {  
-        ArgumentException.ThrowIfNullOrEmpty(category, nameof(category)); 
+    public static Product Create(string name, string? description, Money price, string? category)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(category);
         return new Product(name, description, price, category);
     }
- 
 }

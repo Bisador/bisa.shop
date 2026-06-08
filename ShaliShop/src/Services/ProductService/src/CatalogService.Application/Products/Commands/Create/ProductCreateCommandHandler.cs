@@ -1,3 +1,4 @@
+using CatalogService.Domain.Products.ValueObjects;
 using Shared.Media.Contracts;
 
 namespace CatalogService.Application.Products.Commands.Create;
@@ -6,39 +7,40 @@ public class ProductCreateCommandHandler(
     IProductRepository repository,
     ICatalogUnitOfWork unitOfWork,
     IMediaServiceClient mediaClient
- 
 ) : IRequestHandler<ProductCreateCommand, Result<Guid>>
 {
     private static Guid TenantId => Guid.Empty;
 
     public async Task<Result<Guid>> Handle(ProductCreateCommand command, CancellationToken ct)
     {
-        var mediaIds = command.MediaIds.ToList();
+        var allMediaIds = command.MediaIds?.ToList() ?? [];
 
         if (command.ThumbnailMediaId.HasValue)
         {
-            mediaIds.Add(command.ThumbnailMediaId.Value);
+            allMediaIds.Add(command.ThumbnailMediaId.Value);
         }
+
+        allMediaIds = allMediaIds.Distinct().ToList();
 
         var validation = await mediaClient.ValidateAsync(
             TenantId,
-            mediaIds.Distinct(),
+            allMediaIds,
             ct);
 
         if (validation.IsFailure)
             return Result.Failure<Guid>(validation.Error!);
 
-        var product = Product.Create(command.Name, command.Description, command.Price, command.Category);
+        var product = Product.Create(command.Name, command.Description, new Money(command.Amount, command.Currency),
+            command.Category);
 
-        foreach (var mediaId in command.MediaIds)
+        foreach (var mediaId in allMediaIds)
         {
-            product.AddMedia(mediaId);
+            product.AddMedia(new ProductMediaValue(mediaId));
         }
 
         if (command.ThumbnailMediaId.HasValue)
         {
-            product.SetThumbnail(
-                command.ThumbnailMediaId.Value);
+            product.SetThumbnail(new ProductMediaValue(command.ThumbnailMediaId.Value));
         }
 
         repository.Add(product);
@@ -46,20 +48,20 @@ public class ProductCreateCommandHandler(
 
         var owner = new OwnerReference("Product", product.Id.ToString());
 
-        if (product.ThumbnailMediaId.HasValue)
+        if (product.ThumbnailMedia is not null)
         {
             await mediaClient.LinkAsync(
                 TenantId,
-                product.ThumbnailMediaId.Value,
+                product.ThumbnailMedia.MediaId,
                 owner,
                 ct);
         }
 
-        foreach (var mediaId in product.MediaIds)
+        foreach (var media in product.MediaItems)
         {
             await mediaClient.LinkAsync(
                 TenantId,
-                mediaId,
+                media.MediaId,
                 owner,
                 ct);
         }

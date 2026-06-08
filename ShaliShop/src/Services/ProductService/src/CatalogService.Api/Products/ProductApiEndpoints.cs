@@ -1,4 +1,4 @@
-using CatalogService.Api.Models;
+using CatalogService.Api.Requests;
 using CatalogService.Application.Abstraction.Products;
 using CatalogService.Application.Products.Commands.AddVariant;
 using CatalogService.Application.Products.Commands.ChangePrice;
@@ -44,22 +44,29 @@ public static class ProductApiEndpoints
         if (id == Guid.Empty)
             return TypedResults.BadRequest();
         var result = await mediator.Send(new ProductGetByIdQuery(id));
-       
+
         return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
     }
 
     private static async Task<Results<Created<Guid>, ProblemHttpResult>> CreateProduct(
-        [FromBody] ProductCreateCommand command,
-        [FromServices] IMediator mediator)
+        ProductCreateRequest request,
+        IMediator mediator)
     {
+        var command = new ProductCreateCommand(
+            Name: request.Name,
+            Description: request.Description,
+            Amount: request.Amount,
+            Currency: request.Currency,
+            Category: request.Category,
+            ThumbnailMediaId: request.ThumbnailMediaId,
+            MediaIds: request.MediaIds);
         var result = await mediator.Send(command);
-         
-        return result.IsSuccess ? 
-            TypedResults.Created($"/api/catalog/products/{result.Value}", result.Value) : 
-            result.Problem();
+
+        return result.IsSuccess
+            ? TypedResults.Created($"/api/catalog/products/{result.Value}", result.Value)
+            : result.Problem();
     }
 
-   
 
     private static async Task<Results<NoContent, ProblemHttpResult>> PublishProduct(
         Guid id,
@@ -74,7 +81,7 @@ public static class ProductApiEndpoints
         [FromServices] IMediator mediator)
     {
         var result = await mediator.Send(new ProductDiscontinueCommand(id));
-        return result.IsSuccess ? TypedResults.NoContent() :result.Problem();
+        return result.IsSuccess ? TypedResults.NoContent() : result.Problem();
     }
 
     private static async Task<Results<NoContent, ProblemHttpResult>> AddVariant(
@@ -82,7 +89,7 @@ public static class ProductApiEndpoints
         [FromBody] ProductAddVariantRequest request, // assume DTO → command mapping
         [FromServices] IMediator mediator)
     {
-        var command = new ProductAddVariantCommand(id, request.Sku, request.Options, Money.From(request.PriceOverride)) ;
+        var command = new ProductAddVariantCommand(id, request.Sku, request.Options, Money.From(request.PriceOverride));
         var result = await mediator.Send(command);
         return result.IsSuccess ? TypedResults.NoContent() : result.Problem();
     }
@@ -101,7 +108,7 @@ public static class ProductApiEndpoints
         [FromBody] ChangePriceRequest request,
         [FromServices] IMediator mediator)
     {
-        var result = await mediator.Send(new ProductChangePriceCommand(id,Money.From(request.NewPrice)));
+        var result = await mediator.Send(new ProductChangePriceCommand(id, Money.From(request.NewPrice)));
         return result.IsSuccess ? TypedResults.NoContent() : result.Problem();
     }
 }
