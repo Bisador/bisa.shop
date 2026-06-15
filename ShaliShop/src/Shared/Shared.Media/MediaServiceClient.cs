@@ -10,10 +10,10 @@ public sealed class MediaServiceClient(HttpClient httpClient) : IMediaServiceCli
 {
     public async Task<Result> ValidateAsync(
         Guid tenantId,
-        IEnumerable<Guid> mediaIds,
+        IEnumerable<Guid> ids,
         CancellationToken ct)
     {
-        var enumerable = mediaIds.ToList();
+        var enumerable = ids.ToList();
         var request = new ValidateMediaRequest(enumerable.ToList());
 
         var response =
@@ -34,6 +34,32 @@ public sealed class MediaServiceClient(HttpClient httpClient) : IMediaServiceCli
             return Result.Failure(new InvalidMediaError());
 
         return Result.Success();
+    }
+
+    public async Task<Result<IReadOnlyCollection<MediaMetadataResponse>>> GetMetadataBatchAsync(
+        string category,
+        IEnumerable<Guid> mediaIds,
+        CancellationToken ct)
+    {
+        var ids = mediaIds.ToList();
+
+        if (ids.Count == 0)
+            return Result.Success<IReadOnlyCollection<MediaMetadataResponse>>([]);
+
+        var query = string.Join("&", ids.Select(x => $"Ids={Uri.EscapeDataString(x.ToString())}"));
+        var requestUrl = $"/api/media/metadata?{query}";
+
+        var response = await httpClient.GetAsync(requestUrl, ct);
+
+        if (!response.IsSuccessStatusCode)
+            return Result.Failure<IReadOnlyCollection<MediaMetadataResponse>>(new InvalidMediaError());
+ 
+        var metadata = await response.Content.ReadFromJsonAsync<List<MediaMetadataResponse>>(ct);
+
+        if (metadata is null)
+            return Result.Failure<IReadOnlyCollection<MediaMetadataResponse>>(new InvalidMediaError());
+
+        return Result.Success<IReadOnlyCollection<MediaMetadataResponse>>(metadata);
     }
 
     public async Task<Result> LinkAsync(

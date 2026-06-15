@@ -6,11 +6,10 @@ namespace CatalogService.Application.Products.Commands.Create;
 public class ProductCreateCommandHandler(
     IProductRepository repository,
     ICatalogUnitOfWork unitOfWork,
+    IMediaService mediaService,
     IMediaServiceClient mediaClient
 ) : IRequestHandler<ProductCreateCommand, Result<Guid>>
 {
-    private static Guid TenantId => Guid.Empty;
-
     public async Task<Result<Guid>> Handle(ProductCreateCommand command, CancellationToken ct)
     {
         var allMediaIds = command.MediaIds?.ToList() ?? [];
@@ -22,13 +21,14 @@ public class ProductCreateCommandHandler(
 
         allMediaIds = allMediaIds.Distinct().ToList();
 
-        var validation = await mediaClient.ValidateAsync(
-            TenantId,
-            allMediaIds,
-            ct);
+        var mediaMetadata = await mediaService.ValidateAsync(
+            category: nameof(Product),
+            ids: allMediaIds,
+            ct: ct);
 
-        if (validation.IsFailure)
-            return Result.Failure<Guid>(validation.Error!);
+        if (mediaMetadata.IsFailure)
+            return Result.Failure<Guid>(mediaMetadata.Error);
+
 
         var product = Product.Create(command.Name, command.Description, new Money(command.Amount, command.Currency),
             command.Category);
@@ -48,19 +48,11 @@ public class ProductCreateCommandHandler(
 
         var owner = new OwnerReference("Product", product.Id.ToString());
 
-        if (product.ThumbnailMedia is not null)
-        {
-            await mediaClient.LinkAsync(
-                TenantId,
-                product.ThumbnailMedia.MediaId,
-                owner,
-                ct);
-        }
-
+        //TODO: link batch + failure 
         foreach (var media in product.MediaItems)
         {
             await mediaClient.LinkAsync(
-                TenantId,
+                command.TenantId,
                 media.MediaId,
                 owner,
                 ct);

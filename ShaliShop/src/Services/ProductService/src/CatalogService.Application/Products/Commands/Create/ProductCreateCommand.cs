@@ -1,6 +1,7 @@
 ﻿namespace CatalogService.Application.Products.Commands.Create;
 
 public record ProductCreateCommand(
+    Guid TenantId,
     string Name,
     string? Description,
     decimal Amount,

@@ -14,6 +14,8 @@ namespace CatalogService.Api.Products;
 
 public static class ProductApiEndpoints
 {
+    private static Guid TenantId => Guid.Empty;
+
     public static IEndpointRouteBuilder MapProductEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var catalogGroup = endpoints.MapGroup("/api/catalog/products");
@@ -53,6 +55,7 @@ public static class ProductApiEndpoints
         IMediator mediator)
     {
         var command = new ProductCreateCommand(
+            TenantId: TenantId,
             Name: request.Name,
             Description: request.Description,
             Amount: request.Amount,

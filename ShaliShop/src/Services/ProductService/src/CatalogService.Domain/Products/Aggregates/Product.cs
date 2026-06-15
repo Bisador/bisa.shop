@@ -147,8 +147,7 @@ public sealed class Product : AggregateRoot
     }
 
     public static Product Create(string name, string? description, Money price, string? category)
-    {
-        ArgumentException.ThrowIfNullOrEmpty(category);
+    { 
         return new Product(name, description, price, category);
     }
 }

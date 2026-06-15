@@ -1,11 +1,17 @@
 ﻿using Shared.Common;
+using Shared.Media.Contracts.Responses;
 
 namespace Shared.Media.Contracts;
 
 public interface IMediaServiceClient
 {
     Task<Result> ValidateAsync(
-        Guid tenantId,
+        Guid tenantId, 
+        IEnumerable<Guid> ids,
+        CancellationToken ct);
+    
+    Task<Result<IReadOnlyCollection<MediaMetadataResponse>>> GetMetadataBatchAsync( 
+        string category,
         IEnumerable<Guid> mediaIds,
         CancellationToken ct);
 
