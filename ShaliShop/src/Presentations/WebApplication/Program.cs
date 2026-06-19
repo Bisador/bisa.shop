@@ -5,7 +5,7 @@ using InventoryService.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Scalar.AspNetCore;
 using Shared.Application.Behavior;
-using Shared.Media; 
+using Shared.Media;
 using Shared.Media.Contracts;
 using Shared.Presentation.Cors;
 using Shared.Presentation.ExceptionHandling;
@@ -33,12 +33,13 @@ builder.Services
 
 builder.Services.Configure<MediaServiceOptions>(builder.Configuration.GetSection(MediaServiceOptions.SectionName));
 
+builder.Services.AddScoped<IMediaService, MediaService>();
 builder.Services.AddHttpClient<IMediaServiceClient, MediaServiceClient>((sp, client) =>
 {
     var options = sp.GetRequiredService<IOptions<MediaServiceOptions>>();
     client.BaseAddress = new Uri(options.Value.BaseUrl);
 });
-    //.AddStandardResilienceHandler();
+//.AddStandardResilienceHandler();
 
 builder.Services.RegisterEventHandling(builder.Environment, "");
 
